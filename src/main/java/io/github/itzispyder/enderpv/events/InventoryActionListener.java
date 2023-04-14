@@ -78,9 +78,7 @@ public class InventoryActionListener implements Listener {
                 profile.save();
             }
         }
-        catch (Exception ignore) {
-            ignore.printStackTrace();
-        }
+        catch (Exception ignore) {}
     }
 
     @EventHandler
@@ -96,9 +94,7 @@ public class InventoryActionListener implements Listener {
                 p.openInventory(profile.getGui());
             }
         }
-        catch (Exception ignore) {
-            ignore.printStackTrace();
-        }
+        catch (Exception ignore) {}
     }
 
     @EventHandler
@@ -123,8 +119,6 @@ public class InventoryActionListener implements Listener {
                 profile.save();
             }
         }
-        catch (Exception ignore) {
-            ignore.printStackTrace();
-        }
+        catch (Exception ignore) {}
     }
 }
