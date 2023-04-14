@@ -24,4 +24,5 @@
 - NOTE: The minimum index is `1`, and the maximum index is `54`!
 - Right click a vault slot with an item to set the icon of the vault slot!
 - Left click a vault slot to drop the item into the vault without opening it!
+- An option to disable overriding enderchests in config, the config does not need to be reloaded!
 
