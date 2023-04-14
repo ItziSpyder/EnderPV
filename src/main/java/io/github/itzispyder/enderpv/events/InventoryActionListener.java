@@ -48,7 +48,7 @@ public class InventoryActionListener implements Listener {
                     case LEFT -> {
                         if (hovered != null && !hovered.getType().isAir()) {
                             if (v.isFull()) return;
-                            v.setItem(v.firstEmpty(),hovered);
+                            v.addItem(hovered);
                             profile.save();
                             e.getView().setCursor(null);
                             p.openInventory(profile.getGui());

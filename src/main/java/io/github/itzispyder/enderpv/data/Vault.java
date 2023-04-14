@@ -53,6 +53,12 @@ public class Vault implements Serializable, ConfigurationSerializable {
         return -1;
     }
 
+    public void addItem(ItemStack... items) {
+        Inventory inv = getGui(true);
+        inv.addItem(items);
+        setContents(inv.getContents());
+    }
+
     public int getSize() {
         return Arrays.stream(contents).filter(Objects::nonNull).toList().size();
     }
