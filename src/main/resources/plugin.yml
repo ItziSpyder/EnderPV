@@ -1,0 +1,20 @@
+name: EnderPV
+version: '${version}'
+main: io.github.itzispyder.enderpv.EnderPV
+api-version: 1.17
+prefix: EnderPV
+authors: [ImproperIssues]
+description: Revamps each player's ender chest to personal vaults!
+website: https://itzispyder.github.io/
+permissions:
+  enderpv.commands.enderpv.viewall:
+    description: Access to view all players' ender vaults.
+    default: op
+commands:
+  enderpv:
+    description: Open up yor ender vault.
+    usage: /enderpv <index>
+    aliases:
+      - pv
+      - playervault
+      - endervault
