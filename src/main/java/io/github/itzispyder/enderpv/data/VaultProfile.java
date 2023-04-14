@@ -2,7 +2,9 @@ package io.github.itzispyder.enderpv.data;
 
 import io.github.itzispyder.enderpv.util.FileValidationUtils;
 import io.github.itzispyder.enderpv.util.Text;
+import io.github.itzispyder.enderpv.util.VaultUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
@@ -46,7 +48,12 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
 
     public Inventory getGui() {
         Inventory inv = Bukkit.createInventory(null,54, hiddenPrefix + player().getName() + "'s Vaults");
-        for (int i = 0; i < vaults.size(); i++) {
+        ItemStack x = new ItemBuilder()
+                .material(Material.LIGHT_GRAY_STAINED_GLASS_PANE)
+                .name(Text.color("&7Inaccessible Vault"))
+                .build();
+
+        for (int i = 0; i < VaultUtils.getMaxVaults(player().getPlayer()); i++) {
             Vault v = getVault(i);
             if (v == null) continue;
             inv.setItem(i, new ItemBuilder()
@@ -64,6 +71,8 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
                     )
                     .build());
         }
+
+        while (inv.firstEmpty() != -1) inv.setItem(inv.firstEmpty(), x);
         return inv;
     }
 

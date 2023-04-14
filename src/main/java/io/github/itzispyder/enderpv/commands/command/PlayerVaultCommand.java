@@ -6,6 +6,7 @@ import io.github.itzispyder.enderpv.data.Vault;
 import io.github.itzispyder.enderpv.data.VaultProfile;
 import io.github.itzispyder.enderpv.util.ArrayUtils;
 import io.github.itzispyder.enderpv.util.Text;
+import io.github.itzispyder.enderpv.util.VaultUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -30,8 +31,8 @@ public class PlayerVaultCommand implements TabExecutor {
                 return true;
             }
 
-            int index = Integer.parseInt(args[0]) - 1;
             if (args.length == 1) {
+                int index = Math.min(Integer.parseInt(args[0]), VaultUtils.getMaxVaults(p)) - 1;
                 Vault v = profile.getVault(index);
                 p.openInventory(v.getGui(true));
                 return true;
@@ -41,6 +42,7 @@ public class PlayerVaultCommand implements TabExecutor {
                 return true;
             }
 
+            int index = Integer.parseInt(args[0]) - 1;
             profile = VaultProfile.load(Bukkit.getOfflinePlayer(args[1]).getUniqueId());
             Vault v = profile.getVault(index);
             p.openInventory(v.getGui(false));

@@ -3,6 +3,7 @@ package io.github.itzispyder.enderpv.events;
 import io.github.itzispyder.enderpv.data.Vault;
 import io.github.itzispyder.enderpv.data.VaultProfile;
 import io.github.itzispyder.enderpv.util.Text;
+import io.github.itzispyder.enderpv.util.VaultUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -36,6 +37,7 @@ public class InventoryActionListener implements Listener {
             if (newTitle.contains(Text.color("'s Vaults"))) {
                 e.setCancelled(true);
 
+                if (VaultUtils.getMaxVaults(p) < (e.getSlot() + 1)) return;
                 String name = newTitle.replaceAll(Text.color("'s Vaults"),"").trim();
                 OfflinePlayer owner = name.isBlank() ? p : Bukkit.getOfflinePlayer(name);
                 VaultProfile profile = VaultProfile.load(owner.getUniqueId());
