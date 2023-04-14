@@ -1,5 +1,6 @@
 package io.github.itzispyder.enderpv.events;
 
+import io.github.itzispyder.enderpv.data.Config;
 import io.github.itzispyder.enderpv.data.Vault;
 import io.github.itzispyder.enderpv.data.VaultProfile;
 import io.github.itzispyder.enderpv.util.Text;
@@ -101,6 +102,7 @@ public class InventoryActionListener implements Listener {
 
         try {
             if (inv.getType() == InventoryType.ENDER_CHEST) {
+                if (!Config.Plugin.overrideEnderchests()) return;
                 e.setCancelled(true);
 
                 VaultProfile profile = VaultProfile.load(p.getUniqueId());

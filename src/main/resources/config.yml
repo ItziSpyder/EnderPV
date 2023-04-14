@@ -1,0 +1,6 @@
+config:
+
+  plugin:
+    # Makes it so that opening an ender chest would open our
+    # custom GUI instead.
+    override-enderchests: true
