@@ -23,4 +23,5 @@
 - If you use a permissions plugin like [LuckPerms](https://luckperms.net/download), you would be able to limit a player's access to vault indexes by creating a permission and adding it to the player with the following format: `enderpv.commands.enderpv.<max-index-number>`.
 - NOTE: The minimum index is `1`, and the maximum index is `54`!
 - Right click a vault slot with an item to set the icon of the vault slot!
+- Left click a vault slot to drop the item into the vault without opening it!
 
