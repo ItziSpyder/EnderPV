@@ -26,7 +26,7 @@ public class Vault implements Serializable, ConfigurationSerializable {
         this.icon = Material.LIME_STAINED_GLASS_PANE;
         this.index = index;
         this.owner = owner;
-        this.contents = new ItemStack[]{};
+        this.contents = new ItemStack[54];
     }
 
     public OfflinePlayer player() {
@@ -40,12 +40,28 @@ public class Vault implements Serializable, ConfigurationSerializable {
         action.accept(p);
     }
 
+    public void setItem(int index, ItemStack item) {
+        contents[index] = item;
+    }
+
+    public int firstEmpty() {
+        for (int i = 0; i < 54; i++) {
+            ItemStack item = contents[i];
+            if (item == null) return i;
+            if (item.getType().isAir()) return i;
+        }
+        return -1;
+    }
+
     public int getSize() {
         return Arrays.stream(contents).filter(Objects::nonNull).toList().size();
     }
 
     public boolean isEmpty() {
         return getSize() == 0;
+    }
+    public boolean isFull() {
+        return getSize() == 54;
     }
 
     public String getStatus() {

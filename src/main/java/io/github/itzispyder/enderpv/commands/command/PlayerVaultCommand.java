@@ -8,7 +8,6 @@ import io.github.itzispyder.enderpv.util.ArrayUtils;
 import io.github.itzispyder.enderpv.util.Text;
 import io.github.itzispyder.enderpv.util.VaultUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -46,7 +45,6 @@ public class PlayerVaultCommand implements TabExecutor {
             profile = VaultProfile.load(Bukkit.getOfflinePlayer(args[1]).getUniqueId());
             Vault v = profile.getVault(index);
             p.openInventory(v.getGui(false));
-            p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN,1,0.1F);
         }
         catch (Exception ex) {
             CmdExHandler handler = new CmdExHandler(ex,command);

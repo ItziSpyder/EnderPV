@@ -43,30 +43,41 @@ public class InventoryActionListener implements Listener {
                 VaultProfile profile = VaultProfile.load(owner.getUniqueId());
                 Vault v = profile.getVault(e.getSlot());
 
-                if (click == ClickType.LEFT) {
-                    p.openInventory(v.getGui(false));
-                    p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN,1,0.1F);
-                }
-                else if (click == ClickType.RIGHT) {
-                    if (v.isEmpty()) return;
-                    if (hovered == null || hovered.getType().isAir()) {
-                        if (picked.getType() == v.getDefaultIcon()) {
-                            p.sendMessage(Text.color(prefix + "&cRIGHT-CLICK a vault slot with an item to set the icon!"));
+                switch (click) {
+                    case LEFT -> {
+                        if (hovered != null && !hovered.getType().isAir()) {
+                            if (v.isFull()) return;
+                            v.setItem(v.firstEmpty(),hovered);
+                            profile.save();
+                            e.getView().setCursor(null);
+                            p.openInventory(profile.getGui());
+                            p.playSound(p.getLocation(), Sound.ENTITY_ITEM_PICKUP,1,10);
                             return;
                         }
-                        else {
-                            v.resetIcon();
-                            p.sendMessage(Text.color(prefix + "&aReset icon for &7Vault #" + (v.getIndex() + 1)));
+                        p.openInventory(v.getGui(false));
+                        p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN,1,1);
+                    }
+                    case RIGHT -> {
+                        if (v.isEmpty()) return;
+                        if (hovered == null || hovered.getType().isAir()) {
+                            if (picked.getType() == v.getDefaultIcon()) {
+                                p.sendMessage(Text.color(prefix + "&cRIGHT-CLICK a vault slot with an item to set the icon!"));
+                                return;
+                            }
+                            else {
+                                v.resetIcon();
+                                p.sendMessage(Text.color(prefix + "&aReset icon for &7Vault #" + (v.getIndex() + 1)));
+                            }
                         }
-                    }
-                    else {
-                        v.setIcon(hovered.getType());
-                        p.sendMessage(Text.color(prefix + "&aIcon updated for &7Vault #" + (v.getIndex() + 1)));
-                    }
+                        else {
+                            v.setIcon(hovered.getType());
+                            p.sendMessage(Text.color(prefix + "&aIcon updated for &7Vault #" + (v.getIndex() + 1)));
+                        }
 
-                    profile.save();
-                    p.openInventory(profile.getGui());
-                    p.playSound(p.getLocation(), Sound.ITEM_DYE_USE,1,1);
+                        profile.save();
+                        p.openInventory(profile.getGui());
+                        p.playSound(p.getLocation(), Sound.ITEM_DYE_USE,1,1);
+                    }
                 }
             }
             else if (newTitle.contains(Text.color(" Vault #"))) {

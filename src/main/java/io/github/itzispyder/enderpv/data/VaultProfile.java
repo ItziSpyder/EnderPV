@@ -60,6 +60,9 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
                     .material(v.getIcon())
                     .name(Text.color("&6Vault &7#" + (i + 1)))
                     .lore(v.getStatus())
+                    .lore("")
+                    .lore(Text.color("&eʀɪɢʜᴛ ᴄʟɪᴄᴋ -ᴄʜᴀɴɢᴇ ɪᴄᴏɴ"))
+                    .lore(Text.color("&eʟᴇғᴛ ᴄʟɪᴄᴋ -ᴀᴅᴅ ᴛᴏ ᴠᴀᴜʟᴛ"))
                     .flag(
                             ItemFlag.HIDE_ENCHANTS,
                             ItemFlag.HIDE_ATTRIBUTES,
