@@ -19,4 +19,5 @@
 | /enderpv | /enderpv `<index>`           | Opens up player vault from index           | default                          | /pv, /endervault, /playervault |
 | /enderpv | /enderpv `<index>` `<player>`| Opens up another player's vault from index | enderpv.commands.enderpv.viewall | /pv, /endervault, /playervault |
 
-
+# Side-Features
+- If you use a permissions plugin like [LuckPerms](https://luckperms.net/download), you would be able to limit a player's access to vault indexes by creating a permission and adding it to the player with the following format: `enderpv.commands.enderpv.<max-index-number>`.
