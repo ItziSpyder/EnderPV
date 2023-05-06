@@ -87,6 +87,20 @@ public class Vault implements Serializable, ConfigurationSerializable {
         return inv;
     }
 
+    public void openForOwner() {
+        this.ifOwnerOnlineRun(p -> {
+            if (VaultProfile.isAlreadyViewing(p)) return;
+            VaultProfile.setAlreadyViewing(p, true);
+            p.openInventory(this.getGui(true));
+        });
+    }
+
+    public void closeForOwner() {
+        this.ifOwnerOnlineRun(p -> {
+            VaultProfile.setAlreadyViewing(p, false);
+        });
+    }
+
     public ItemStack[] getContents() {
         return contents;
     }

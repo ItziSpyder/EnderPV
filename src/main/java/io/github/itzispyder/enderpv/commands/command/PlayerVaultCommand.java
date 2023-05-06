@@ -26,14 +26,14 @@ public class PlayerVaultCommand implements TabExecutor {
             VaultProfile profile = VaultProfile.load(p.getUniqueId());
 
             if (args.length == 0) {
-                p.openInventory(profile.getGui());
+                profile.openForOwner();
                 return true;
             }
 
             if (args.length == 1) {
                 int index = Math.min(Integer.parseInt(args[0]), VaultUtils.getMaxVaults(p)) - 1;
                 Vault v = profile.getVault(index);
-                p.openInventory(v.getGui(true));
+                v.openForOwner();
                 return true;
             }
             if (!p.hasPermission("enderpv.commands.enderpv.viewall")) {
@@ -44,7 +44,7 @@ public class PlayerVaultCommand implements TabExecutor {
             int index = Integer.parseInt(args[0]) - 1;
             profile = VaultProfile.load(Bukkit.getOfflinePlayer(args[1]).getUniqueId());
             Vault v = profile.getVault(index);
-            p.openInventory(v.getGui(false));
+            v.openForOwner();
         }
         catch (Exception ex) {
             CmdExHandler handler = new CmdExHandler(ex,command);

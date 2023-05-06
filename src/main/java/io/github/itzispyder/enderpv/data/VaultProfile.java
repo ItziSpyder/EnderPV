@@ -25,6 +25,7 @@ import static io.github.itzispyder.enderpv.EnderPV.log;
 
 public class VaultProfile implements Serializable, ConfigurationSerializable {
 
+    public static final Map<UUID, Boolean> opened = new HashMap<>();
     private final UUID owner;
     private final List<Vault> vaults;
 
@@ -87,8 +88,32 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
         return owner;
     }
 
+    public static boolean isAlreadyViewing(Player p) {
+        if (p == null || !p.isOnline()) return false;
+        return opened.containsKey(p.getUniqueId()) && opened.get(p.getUniqueId());
+    }
+
+    public static void setAlreadyViewing(Player p, boolean viewing) {
+        if (p == null) return;
+        opened.put(p.getUniqueId(), viewing);
+    }
+
     public List<Vault> getVaults() {
         return vaults;
+    }
+
+    public void openForOwner() {
+        this.ifOwnerOnlineRun(p -> {
+            if (isAlreadyViewing(p)) return;
+            setAlreadyViewing(p,true);
+            p.openInventory(this.getGui());
+        });
+    }
+
+    public void closeForOwner() {
+        this.ifOwnerOnlineRun(p -> {
+            setAlreadyViewing(p,false);
+        });
     }
 
     /**

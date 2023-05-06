@@ -51,11 +51,11 @@ public class InventoryActionListener implements Listener {
                             v.addItem(hovered);
                             profile.save();
                             e.getView().setCursor(null);
-                            p.openInventory(profile.getGui());
+                            profile.openForOwner();
                             p.playSound(p.getLocation(), Sound.ENTITY_ITEM_PICKUP,1,10);
                             return;
                         }
-                        p.openInventory(v.getGui(false));
+                        v.openForOwner();
                         p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN,1,1);
                     }
                     case RIGHT -> {
@@ -76,7 +76,7 @@ public class InventoryActionListener implements Listener {
                         }
 
                         profile.save();
-                        p.openInventory(profile.getGui());
+                        profile.openForOwner();
                         p.playSound(p.getLocation(), Sound.ITEM_DYE_USE,1,1);
                     }
                 }
@@ -106,7 +106,7 @@ public class InventoryActionListener implements Listener {
                 e.setCancelled(true);
 
                 VaultProfile profile = VaultProfile.load(p.getUniqueId());
-                p.openInventory(profile.getGui());
+                profile.openForOwner();
             }
         }
         catch (Exception ignore) {}
@@ -131,6 +131,7 @@ public class InventoryActionListener implements Listener {
                 int index = Integer.parseInt(titles[1]) - 1;
 
                 profile.update(index, inv.getContents());
+                profile.closeForOwner();
                 profile.save();
             }
         }
