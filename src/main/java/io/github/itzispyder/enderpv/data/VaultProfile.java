@@ -1,8 +1,9 @@
 package io.github.itzispyder.enderpv.data;
 
-import io.github.itzispyder.enderpv.util.FileValidationUtils;
-import io.github.itzispyder.enderpv.util.Text;
 import io.github.itzispyder.enderpv.util.VaultUtils;
+import io.github.itzispyder.pdk.Global;
+import io.github.itzispyder.pdk.plugin.builders.ItemBuilder;
+import io.github.itzispyder.pdk.utils.FileValidationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.*;
@@ -21,11 +23,10 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static io.github.itzispyder.enderpv.EnderPV.hiddenPrefix;
-import static io.github.itzispyder.enderpv.EnderPV.log;
 
-public class VaultProfile implements Serializable, ConfigurationSerializable {
+public class VaultProfile implements Serializable, ConfigurationSerializable, Global {
 
-    public static final Map<UUID, Boolean> opened = new HashMap<>();
+    public static final Set<UUID> opened = new HashSet<>();
     private final UUID owner;
     private final List<Vault> vaults;
 
@@ -47,11 +48,12 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
         action.accept(p);
     }
 
+    @SuppressWarnings("all")
     public Inventory getGui() {
         Inventory inv = Bukkit.createInventory(null,54, hiddenPrefix + player().getName() + "'s Vaults");
         ItemStack x = new ItemBuilder()
                 .material(Material.LIGHT_GRAY_STAINED_GLASS_PANE)
-                .name(Text.color("&7Inaccessible Vault"))
+                .name(color("&7Inaccessible Vault"))
                 .build();
 
         for (int i = 0; i < VaultUtils.getMaxVaults(player().getPlayer()); i++) {
@@ -59,11 +61,11 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
             if (v == null) continue;
             inv.setItem(i, new ItemBuilder()
                     .material(v.getIcon())
-                    .name(Text.color("&6Vault &7#" + (i + 1)))
+                    .name(color("&6Vault &7#" + (i + 1)))
                     .lore(v.getStatus())
                     .lore("")
-                    .lore(Text.color("&eʀɪɢʜᴛ ᴄʟɪᴄᴋ -ᴄʜᴀɴɢᴇ ɪᴄᴏɴ"))
-                    .lore(Text.color("&eʟᴇғᴛ ᴄʟɪᴄᴋ -ᴀᴅᴅ ᴛᴏ ᴠᴀᴜʟᴛ"))
+                    .lore(color("&eʀɪɢʜᴛ ᴄʟɪᴄᴋ -ᴄʜᴀɴɢᴇ ɪᴄᴏɴ"))
+                    .lore(color("&eʟᴇғᴛ ᴄʟɪᴄᴋ -ᴀᴅᴅ ᴛᴏ ᴠᴀᴜʟᴛ"))
                     .flag(
                             ItemFlag.HIDE_ENCHANTS,
                             ItemFlag.HIDE_ATTRIBUTES,
@@ -88,14 +90,21 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
         return owner;
     }
 
-    public static boolean isAlreadyViewing(Player p) {
-        if (p == null || !p.isOnline()) return false;
-        return opened.containsKey(p.getUniqueId()) && opened.get(p.getUniqueId());
+    public static boolean isAlreadyViewing(UUID id) {
+        return opened.contains(id);
     }
 
-    public static void setAlreadyViewing(Player p, boolean viewing) {
-        if (p == null) return;
-        opened.put(p.getUniqueId(), viewing);
+    public static void setAlreadyViewing(UUID id, boolean viewing) {
+        if (id == null) {
+            return;
+        }
+
+        if (viewing) {
+            opened.add(id);
+        }
+        else {
+            opened.remove(id);
+        }
     }
 
     public List<Vault> getVaults() {
@@ -104,16 +113,17 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
 
     public void openForOwner() {
         this.ifOwnerOnlineRun(p -> {
-            if (isAlreadyViewing(p)) return;
-            setAlreadyViewing(p,true);
+            UUID id = Bukkit.getPlayerUniqueId(p.getName());
+            if (isAlreadyViewing(id)) {
+                error(p, "Cannot view vault profile because the menu is already open for you.");
+                return;
+            }
             p.openInventory(this.getGui());
         });
     }
 
     public void closeForOwner() {
-        this.ifOwnerOnlineRun(p -> {
-            setAlreadyViewing(p,false);
-        });
+        setAlreadyViewing(getOwner(), false);
     }
 
     /**
@@ -141,7 +151,7 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
             boos.close();
         }
         catch (Exception ex) {
-            log.warning("cannot save vault file '" + file.getPath() + "'");
+            Bukkit.getLogger().warning("cannot save vault file '" + file.getPath() + "'");
         }
     }
 
@@ -170,7 +180,7 @@ public class VaultProfile implements Serializable, ConfigurationSerializable {
     }
 
     @Override
-    public Map<String, Object> serialize() {
+    public @NotNull Map<String, Object> serialize() {
         return new HashMap<>();
     }
 }

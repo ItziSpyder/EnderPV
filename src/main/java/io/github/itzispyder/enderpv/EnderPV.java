@@ -1,27 +1,20 @@
 package io.github.itzispyder.enderpv;
 
-import io.github.itzispyder.enderpv.commands.command.PlayerVaultCommand;
+import io.github.itzispyder.enderpv.commands.PlayerVaultCommand;
 import io.github.itzispyder.enderpv.events.InventoryActionListener;
-import io.github.itzispyder.enderpv.util.Text;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
+import io.github.itzispyder.pdk.Global;
+import io.github.itzispyder.pdk.PDK;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
-
-import java.util.logging.Logger;
 
 public final class EnderPV extends JavaPlugin {
 
-    public static final PluginManager pm = Bukkit.getPluginManager();
-    public static final BukkitScheduler sch = Bukkit.getScheduler();
-    public static final Logger log = Bukkit.getLogger();
-    public static final String prefix = Text.color("&7[&6EnderPV&7] &r");
-    public static final String hiddenPrefix = Text.color("&e&n&d&e&r&v&a&u&l&t&s&r");
+    public static final String prefix = Global.instance.color("&7[&6EnderPV&7] &r");
+    public static final String hiddenPrefix = Global.instance.color("&e&n&d&e&r&v&a&u&l&t&s&r");
     public static EnderPV instance;
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        PDK.init(this);
         instance = this;
         this.init();
         this.initConfig();
@@ -29,16 +22,15 @@ public final class EnderPV extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+
     }
 
     public void init() {
         // Events
-        pm.registerEvents(new InventoryActionListener(),this);
+        new InventoryActionListener().register();
 
         // Commands
-        getCommand("enderpv").setExecutor(new PlayerVaultCommand());
-        getCommand("enderpv").setTabCompleter(new PlayerVaultCommand());
+        new PlayerVaultCommand().register();
     }
 
     public void initConfig() {

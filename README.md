@@ -1,5 +1,5 @@
 <h1>
-  <image src="/assets/image/icon.png" style="width: 15%;" />
+  <image src="./assets/image/icon.png" style="width: 15%;" />
   EnderPV
 </h1>
 

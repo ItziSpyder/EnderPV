@@ -1,6 +1,6 @@
 package io.github.itzispyder.enderpv.data;
 
-import io.github.itzispyder.enderpv.util.Text;
+import io.github.itzispyder.pdk.Global;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -8,6 +8,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.*;
@@ -15,7 +16,7 @@ import java.util.function.Consumer;
 
 import static io.github.itzispyder.enderpv.EnderPV.hiddenPrefix;
 
-public class Vault implements Serializable, ConfigurationSerializable {
+public class Vault implements Serializable, ConfigurationSerializable, Global {
 
     private ItemStack[] contents;
     private final UUID owner;
@@ -71,9 +72,10 @@ public class Vault implements Serializable, ConfigurationSerializable {
     }
 
     public String getStatus() {
-        return Text.color(isEmpty() ? "&cEmpty" : "&a" + getSize() + "&7/54 items");
+        return color(isEmpty() ? "&cEmpty" : "&a" + getSize() + "&7/54 items");
     }
 
+    @SuppressWarnings("all")
     public Inventory getGui(boolean self) {
         String name = self ? "" : player().getName() + "'s";
         Inventory inv = Bukkit.createInventory(null,54, hiddenPrefix + name + " Vault #" + (index + 1));
@@ -89,16 +91,18 @@ public class Vault implements Serializable, ConfigurationSerializable {
 
     public void openForOwner() {
         this.ifOwnerOnlineRun(p -> {
-            if (VaultProfile.isAlreadyViewing(p)) return;
-            VaultProfile.setAlreadyViewing(p, true);
+            UUID id = Bukkit.getPlayerUniqueId(p.getName());
+            if (VaultProfile.isAlreadyViewing(id)) {
+                error(p, "Cannot view vault profile because the menu is already open for you.");
+                return;
+            }
+            VaultProfile.setAlreadyViewing(id, true);
             p.openInventory(this.getGui(true));
         });
     }
 
     public void closeForOwner() {
-        this.ifOwnerOnlineRun(p -> {
-            VaultProfile.setAlreadyViewing(p, false);
-        });
+        VaultProfile.setAlreadyViewing(getOwner(), false);
     }
 
     public ItemStack[] getContents() {
@@ -138,7 +142,7 @@ public class Vault implements Serializable, ConfigurationSerializable {
     }
 
     @Override
-    public Map<String, Object> serialize() {
+    public @NotNull Map<String, Object> serialize() {
         return new HashMap<>();
     }
 }
