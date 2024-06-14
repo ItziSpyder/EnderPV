@@ -7,7 +7,6 @@ import io.github.itzispyder.pdk.commands.Args;
 import io.github.itzispyder.pdk.commands.CommandRegistry;
 import io.github.itzispyder.pdk.commands.CustomCommand;
 import io.github.itzispyder.pdk.commands.completions.CompletionBuilder;
-import io.github.itzispyder.pdk.utils.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,15 +40,19 @@ public class PlayerVaultCommand implements CustomCommand {
             return;
         }
 
-        int index = args.get(0).toInt();
+        int index = args.get(0).toInt() - 1;
         profile = VaultProfile.load(Bukkit.getPlayerUniqueId(args.get(1).toString()));
         Vault v = profile.getVault(index);
-        v.openForOwner();
+        p.openInventory(v.getGui(false));
     }
 
     @Override
     public void dispatchCompletions(CompletionBuilder b) {
-        b.then(b.arg("<index: integer>")
-                .then(b.arg(ArrayUtils.toNewList(Bukkit.getOnlinePlayers(),Player::getName))));
+        String[] indexes = new String[54];
+        for (int i = 0; i < 54; i++)
+            indexes[i] = String.valueOf(i + 1);
+
+        b.then(b.arg(indexes)
+                .then(b.arg(Bukkit.getOnlinePlayers(), Player::getName)));
     }
 }
